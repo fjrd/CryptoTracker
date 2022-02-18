@@ -1,0 +1,4 @@
+spring:
+  kafka:
+    bootstrap-servers: pkc-xmzwx.europe-central2.gcp.confluent.cloud:9092
+
