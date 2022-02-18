@@ -12,7 +12,7 @@ docker-compose -f docker-compose.yml up --build
 TODO
 
 ## Api documentation
-TODO
+[customers service](http://localhost:8081/swagger-ui.html)
 
 ## Authors
 TODO
