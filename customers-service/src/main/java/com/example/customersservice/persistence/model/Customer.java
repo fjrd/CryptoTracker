@@ -34,6 +34,6 @@ public class Customer {
     private String name;
 
     @Column(nullable = false)
-    private boolean rememberMe;
+    private boolean rememberMe = false;
 
 }

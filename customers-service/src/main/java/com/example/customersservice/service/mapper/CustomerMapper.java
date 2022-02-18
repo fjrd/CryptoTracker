@@ -6,7 +6,6 @@ import com.example.customersservice.persistence.model.Customer;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-
 public interface CustomerMapper {
 
     Customer signUpDtoToModel(RequestCustomerSugnupDto dto);

@@ -7,23 +7,25 @@ import com.example.customersservice.persistence.model.Customer;
 import com.example.customersservice.persistence.repository.CustomerRepository;
 import com.example.customersservice.service.mapper.CustomerMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class CustomersServiceImpl implements CustomerService{
+public class CustomersServiceImpl implements CustomersService {
 
     private final CustomerMapper mapper;
     private final CustomerRepository repository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    //TODO strengh
+    private final PasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public ResponseCustomerDto signIn(RequestCustomerSigninDto requestDto) {
+        log.info("signIn(), requestDto = {}", requestDto);
         Customer customer = repository.findCustomerByLogin(requestDto.getLogin())
                 .orElseThrow(() -> new EntityNotFoundException("No such customer with login = " + requestDto.getLogin()));
         if(!bCryptPasswordEncoder.matches(requestDto.getPassword(), customer.getPassword()))
@@ -33,6 +35,7 @@ public class CustomersServiceImpl implements CustomerService{
 
     @Override
     public ResponseCustomerDto signUp(RequestCustomerSugnupDto dto) {
+        log.info("signUp(), dto = {}", dto);
         Customer customer = mapper.signUpDtoToModel(dto);
         customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
         customer = repository.save(customer);

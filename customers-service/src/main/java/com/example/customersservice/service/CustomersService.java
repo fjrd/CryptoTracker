@@ -4,7 +4,7 @@ import com.example.customersservice.api.dto.RequestCustomerSigninDto;
 import com.example.customersservice.api.dto.RequestCustomerSugnupDto;
 import com.example.customersservice.api.dto.ResponseCustomerDto;
 
-public interface CustomerService {
+public interface CustomersService {
 
     ResponseCustomerDto signIn(RequestCustomerSigninDto requestCustomerSigninDto);
     ResponseCustomerDto signUp(RequestCustomerSugnupDto dto);
