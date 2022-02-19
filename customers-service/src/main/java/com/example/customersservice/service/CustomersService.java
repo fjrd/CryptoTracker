@@ -1,11 +1,11 @@
 package com.example.customersservice.service;
 
-import com.example.customersservice.api.dto.RequestCustomerSigninDto;
-import com.example.customersservice.api.dto.RequestCustomerSugnupDto;
+import com.example.customersservice.api.dto.RequestCustomerSignInDto;
+import com.example.customersservice.api.dto.RequestCustomerSugnUpDto;
 import com.example.customersservice.api.dto.ResponseCustomerDto;
 
 public interface CustomersService {
 
-    ResponseCustomerDto signIn(RequestCustomerSigninDto requestCustomerSigninDto);
-    ResponseCustomerDto signUp(RequestCustomerSugnupDto dto);
+    ResponseCustomerDto signIn(RequestCustomerSignInDto requestCustomerSigninDto);
+    ResponseCustomerDto signUp(RequestCustomerSugnUpDto dto);
 }

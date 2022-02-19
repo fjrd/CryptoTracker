@@ -1,0 +1,16 @@
+application:
+  secret: "spring"
+  expiration: 604800
+  coinStoreHost: ${COIN_STORE_HOST:http://localhost:8082/}
+  customersHost: ${CUSTOMERS_HOST:http://localhost:8081/}
+  restUri: ${CUSTOMERS_HOST:http://localhost:8081/}
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+
+

@@ -1,13 +1,15 @@
-package com.example.customersservice.api.dto;
+package com.example.apigateway.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
 @AllArgsConstructor
-public class RequestCustomerSugnupDto {
+@NoArgsConstructor
+public class RequestCustomerSignUpDto {
 
     @NotBlank
     private String login;
