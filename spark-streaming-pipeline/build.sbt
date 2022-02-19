@@ -1,6 +1,6 @@
 import sbtassembly.AssemblyPlugin.autoImport.assemblyMergeStrategy
 
-name := "spark-streaming-hw"
+name := "spark-streaming-pipeline"
 
 version := "0.1"
 
@@ -12,16 +12,19 @@ val sparkVersion = "3.2.0"
 val scalaJsonVersion = "4.0.4"
 
 
+val consoleMain = Some("SparkApp")
 
 lazy val spark_app = project
+  .enablePlugins(AssemblyPlugin)
   .settings(
+    mainClass in (Compile, run) := consoleMain,
+    mainClass in assembly := consoleMain,
     libraryDependencies ++= Seq(
       "org.apache.spark" %% "spark-core" % sparkVersion,
       "org.apache.spark" %% "spark-sql" % sparkVersion,
       "org.apache.spark" %% "spark-streaming" % sparkVersion,
       "org.apache.spark" %% "spark-sql-kafka-0-10" % sparkVersion,
       "org.apache.kafka" % "kafka-clients" % "2.8.0",
-//      "org.json4s" %% "json4s-jackson" % scalaJsonVersion
     ),
     assemblyMergeStrategy in assembly := {
       case PathList("META-INF", xs @ _*) => MergeStrategy.discard

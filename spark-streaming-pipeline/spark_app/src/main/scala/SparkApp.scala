@@ -70,10 +70,8 @@ object SparkApp extends App {
   val schemaCandle = ScalaReflection.schemaFor[Candle].dataType.asInstanceOf[StructType]
   val schemaCandleDetails = ScalaReflection.schemaFor[CandleDetails].dataType.asInstanceOf[StructType]
 
-
-  val brokers = "localhost:9092"
-  val topic = "scalaToJava"
-
+  val topic = sys.env.getOrElse("topic_server", "scalaToJava")//todo: test sbt candles/reStart
+  val brokers = sys.env.getOrElse("bootstrap_server", "localhost:9092")
 
   private val properties = {
     val properties = new Properties()
