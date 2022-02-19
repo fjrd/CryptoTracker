@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "customer-service", url = "${application.restUri}")
 public interface CustomerService {
 
-    @PostMapping(value = "/api/v1/sign_in", consumes = "application/json")
+    @PostMapping(value = "/api/v1/auth/sign_in", consumes = "application/json")
     ResponseCustomerDto getCustomer(@RequestBody RequestCustomerSignInDto dto);
 }

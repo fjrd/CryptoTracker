@@ -17,7 +17,7 @@ import javax.validation.Valid;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/v1/")
+@RequestMapping("api/v1/auth/")
 public class AuthenticationController {
 
     private final JwtTokenProvider tokenProvider;

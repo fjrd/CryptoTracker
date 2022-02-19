@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter implements GatewayFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = (ServerHttpRequest) exchange.getRequest();
-        final List<String> apiEndpoints = List.of("/api/v1/sign_up");
+        final List<String> apiEndpoints = List.of("/api/v1/auth/sign_up");
 
         Predicate<ServerHttpRequest> isApiSecured = r -> apiEndpoints.stream()
                 .noneMatch(uri -> r.getURI().getPath().contains(uri));
