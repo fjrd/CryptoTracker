@@ -32,8 +32,8 @@ object Main extends HackathonApp {
   override def start(args: List[String]): SourceActor = {
     implicit val system: ActorSystem = ActorSystem()
 
-    val topic = sys.env("topic_server")
-    val bootstrapServer = sys.env("bootstrap_server")
+    val topic = sys.env.getOrElse("topic_server", "scalaToJava")//todo: test sbt candles/reStart
+    val bootstrapServer = sys.env.getOrElse("bootstrap_server", "localhost:9092")
 
     println(topic + " topic")
     println(bootstrapServer + "bootstrapServer")
