@@ -26,3 +26,4 @@ WORKDIR /root/rht
 COPY . /root/rht
 
 ENTRYPOINT [ "sbt" ]
+CMD ["candles/reStart"]

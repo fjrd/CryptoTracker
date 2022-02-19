@@ -12,6 +12,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.UUID;
 
@@ -40,6 +41,8 @@ public class CustomersServiceImpl implements CustomersService {
         log.info("signUp(), dto = {}", dto);
         Customer customer = mapper.signUpDtoToModel(dto);
         customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
+        if(repository.findCustomerByLogin(dto.getLogin()).isPresent())
+            throw new EntityExistsException("User with id = " + customer.getId() + " already exists");
         customer = repository.save(customer);
         return mapper.modelToResponseDto(customer);
     }
