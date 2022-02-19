@@ -4,8 +4,9 @@ ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
 ENV PATH $PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin
 
 ENV SBT_VERSION 1.3.3
-ENV topic_server=scalaToJava
-ENV bootstrap_server=vm-8.tc.neoflex.cloud:9093
+ENV topic_server=CandleTopic
+ENV bootstrap_server=nf-kafka:9092
+
 # Install curl and vim
 RUN \
   apt-get update && \

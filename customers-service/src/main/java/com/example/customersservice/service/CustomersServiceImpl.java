@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -44,5 +45,12 @@ public class CustomersServiceImpl implements CustomersService {
         customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
         customer = repository.save(customer);
         return mapper.modelToResponseDto(customer);
+    }
+
+    @Override
+    public String getNameByUserId(UUID userId) {
+        Customer customer = repository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("No such customer with login = " + userId));
+        return customer.getName();
     }
 }
