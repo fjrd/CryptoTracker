@@ -31,10 +31,7 @@ public class CustomersServiceImpl implements CustomersService {
                 .orElseThrow(() -> new EntityNotFoundException("No such customer with login = " + requestDto.getLogin()));
         if(!bCryptPasswordEncoder.matches(requestDto.getPassword(), customer.getPassword()))
             throw new BadCredentialsException("Login or password is wrong");
-        System.out.println(customer);
         ResponseCustomerDto responseCustomerDto = mapper.modelToResponseDto(customer);
-        System.out.println(responseCustomerDto);
-//        return mapper.modelToResponseDto(customer);
         return responseCustomerDto;
     }
 
@@ -50,7 +47,7 @@ public class CustomersServiceImpl implements CustomersService {
     @Override
     public String getNameByUserId(UUID userId) {
         Customer customer = repository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("No such customer with login = " + userId));
+                .orElseThrow(() -> new EntityNotFoundException("No such customer with id = " + userId));
         return customer.getName();
     }
 }
