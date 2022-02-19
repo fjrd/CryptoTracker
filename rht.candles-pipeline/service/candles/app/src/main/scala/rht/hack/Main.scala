@@ -2,7 +2,7 @@ package rht.hack
 
 import akka.actor.ActorSystem
 import akka.kafka.ProducerSettings
-import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Sink, Source, ZipWith}
+import akka.stream.scaladsl.{Broadcast, Concat, Flow, GraphDSL, Sink, Source, Zip}
 import akka.stream.{CompletionStrategy, OverflowStrategy, SinkShape}
 import akka.{Done, NotUsed}
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -10,6 +10,7 @@ import org.apache.kafka.common.serialization.StringSerializer
 import rht.common.domain.candles.Candle
 import rht.common.domain.candles.common.Figi
 
+import scala.concurrent.duration._
 /**
   * Program entry point
   *
@@ -19,6 +20,7 @@ import rht.common.domain.candles.common.Figi
 object Main extends HackathonApp {
 
   final case class Data(figi: Figi, max: BigDecimal, min: BigDecimal, avg: BigDecimal, timestamp: Long)
+
   /**
     * Your "main" function
     *
@@ -40,9 +42,6 @@ object Main extends HackathonApp {
       ProducerSettings(configProducer, new StringSerializer, new StringSerializer)
         .withBootstrapServers(bootstrapServer).createKafkaProducer()
 
-    def packaging(max: BigDecimal, min: BigDecimal, avg: BigDecimal, figi: Figi): Data =
-      Data(figi, max, min, avg, System.currentTimeMillis())
-
     val source = Source.actorRef(
       completionMatcher = {
         case Done =>
@@ -55,24 +54,39 @@ object Main extends HackathonApp {
     val graph = GraphDSL.create() { implicit builder: GraphDSL.Builder[NotUsed] =>
       import akka.stream.scaladsl.GraphDSL.Implicits._
 
-      val id = builder.add(Flow[Candle].map(x => x.figi))
-      val min = builder.add(Flow[Candle].map(x => x.details.low))
-      val max = builder.add(Flow[Candle].map(x => x.details.high))
-      val avg = builder.add(Flow[Candle].map(x => (x.details.high - x.details.low) / 2))
+      val memoryStore = scala.collection.mutable.ListBuffer[Candle]()
 
-//      val maxAllTime = builder.add(Flow[Candle].reduce((value, x) => (if (x.details.low > value) x.details.low else value)))
+      val max = Source
+        .tick(
+          1.second,
+          60.second,
+          {
+            if (memoryStore.nonEmpty) {
+              val max = memoryStore.reduce[Candle]((prev, next) => if (prev.details.high < next.details.high) next else prev)
+              Data(max.figi, max.details.high, max.details.low, (max.details.high - max.details.low) / 2, System.currentTimeMillis()).toString
+            } else {
+              "null"
+            }
+          }
+        )
 
-      val output = builder.add(Sink.foreach[Data](x => producer.send(
-        new ProducerRecord[String, String](topic, x.toString)
-      )))
+      max.runForeach(x => println("fsdfsdf" + x))
 
-      val broadcast = builder.add(Broadcast[Candle](4))
-      val zip = builder.add(ZipWith[BigDecimal, BigDecimal, BigDecimal, Figi, Data](packaging))
-      broadcast.out(0) ~> max ~> zip.in0
-      broadcast.out(1) ~> min ~> zip.in1
-      broadcast.out(2) ~> avg ~> zip.in2
-      broadcast.out(3) ~> id ~> zip.in3
-      zip.out ~> output
+      val outputMax: SinkShape[Candle] = builder.add(Sink.foreach[Candle](x => producer.send {
+        new ProducerRecord[String, String](topic, if (memoryStore.nonEmpty) {
+          val max = memoryStore.reduce[Candle]((prev, next) => if (prev.details.high < next.details.high) next else prev)
+          Data(max.figi, max.details.high, max.details.low, (max.details.high - max.details.low) / 2, System.currentTimeMillis()).toString
+        } else {
+          "null"
+        })
+      }))
+
+      val output2 = builder.add(Flow[Candle].map(x => {memoryStore.append(x); x}))
+
+      val broadcast = builder.add(Broadcast[Candle](2))
+
+      broadcast.out(0) ~> output2 ~> outputMax
+
       SinkShape(broadcast.in)
     }
     source.to(Sink.fromGraph(graph)).run()
