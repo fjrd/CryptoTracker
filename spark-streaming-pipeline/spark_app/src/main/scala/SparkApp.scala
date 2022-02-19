@@ -1,13 +1,13 @@
+import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig._
 import org.apache.kafka.common.serialization.{LongSerializer, StringSerializer}
 import org.apache.spark.sql.catalyst.ScalaReflection
-import org.apache.spark.sql.functions.{avg, col, from_json}
+import org.apache.spark.sql.functions.{avg, col, current_timestamp, from_json, max, min, unix_timestamp}
 import org.apache.spark.sql.streaming.Trigger.ProcessingTime
-import org.apache.spark.sql.types.{StringType, StructType}
+import org.apache.spark.sql.types.{StringType, StructType, TimestampType}
 import org.apache.spark.sql.{Column, DataFrame, SparkSession}
 import org.json4s.DefaultFormats
-import org.apache.spark.sql.functions.{avg, max, col, min, from_json}
-
+import org.apache.spark.sql.streaming.StreamingQuery
 
 import java.time.Instant
 import java.util.Properties
@@ -83,6 +83,8 @@ object SparkApp extends App {
     properties
   }
 
+  val producer = new KafkaProducer[Long, String](properties)
+
   val spark = SparkSession.builder
     .appName("spark-streaming-hw")
     .master(sys.env.getOrElse("spark.master", "local[*]"))
@@ -96,19 +98,30 @@ object SparkApp extends App {
     .option("subscribe", topic)
     .load()
 
-  val query = records
-    .withColumn("CandleDetails", from_json(col("value").cast(StringType), schemaCandle).getField("details"))
-    .withColumn("low", (col("CandleDetails").cast(schemaCandleDetails)).getField("low"))
-    .withColumn("high", (col("CandleDetails").cast(schemaCandleDetails)).getField("high"))
-    .select(
-      max("high").as("Max CandleDetails high"),
-      min("low").as("Min CandleDetails low")
+  val candle = col("CandleDetails").cast(schemaCandleDetails)
+  val query: StreamingQuery = records
+    .withColumn("Candle", from_json(col("value").cast(StringType), schemaCandle))
+    .withColumn("CandleDetails", col("Candle").getField("details"))
+    .withColumn("figi", col("Candle").getField("figi"))
+    .withColumn("low", candle.getField("low"))
+    .withColumn("high", candle.getField("high"))
+    .withWatermark("timestamp", "1 minutes")
+    .groupBy("figi")
+    .agg(
+      max("high").as("max"),
+      min("low").as("min")
     )
+    .withColumn("timestamp", current_timestamp())
+    .toJSON
     .writeStream
     .outputMode("update")
-    .trigger(ProcessingTime("10 seconds"))
-    .format("console")
+    .trigger(ProcessingTime("5 seconds"))
+    .format("kafka")
+    .option("kafka.bootstrap.servers", brokers)
+    .option("topic", topic)
+    .option("checkpointLocation", "./tmpCheckpoint")
     .start()
+
 
 
   query.awaitTermination()
