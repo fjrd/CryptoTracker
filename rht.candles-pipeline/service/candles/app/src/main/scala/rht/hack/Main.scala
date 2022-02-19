@@ -1,15 +1,14 @@
 package rht.hack
 
-import akka.{Done, NotUsed}
 import akka.actor.ActorSystem
-import akka.stream.{CompletionStrategy, OverflowStrategy, SinkShape}
-import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Sink, Source, ZipWith}
 import akka.kafka.ProducerSettings
+import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Sink, Source, ZipWith}
+import akka.stream.{CompletionStrategy, OverflowStrategy, SinkShape}
+import akka.{Done, NotUsed}
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringSerializer
 import rht.common.domain.candles.Candle
 import rht.common.domain.candles.common.Figi
-import rht.kafka.producer.KafkaProducer
 
 /**
   * Program entry point
@@ -20,7 +19,6 @@ import rht.kafka.producer.KafkaProducer
 object Main extends HackathonApp {
 
   final case class Data(figi: Figi, max: BigDecimal, min: BigDecimal, avg: BigDecimal, timestamp: Long)
-
   /**
     * Your "main" function
     *
@@ -30,10 +28,17 @@ object Main extends HackathonApp {
   override def start(args: List[String]): SourceActor = {
     implicit val system: ActorSystem = ActorSystem()
 
+    val topic = sys.env("topic_server")
+    val bootstrapServer = sys.env("bootstrap_server")
+
+    println(topic + " topic")
+    println(bootstrapServer + "bootstrapServer")
+
+    //Как использовать KafkaProducer?
     val configProducer = system.settings.config.getConfig("akka.kafka.producer")
     val producer =
       ProducerSettings(configProducer, new StringSerializer, new StringSerializer)
-        .withBootstrapServers("localhost:9092").createKafkaProducer()
+        .withBootstrapServers(bootstrapServer).createKafkaProducer()
 
     def packaging(max: BigDecimal, min: BigDecimal, avg: BigDecimal, figi: Figi): Data =
       Data(figi, max, min, avg, System.currentTimeMillis())
@@ -55,8 +60,10 @@ object Main extends HackathonApp {
       val max = builder.add(Flow[Candle].map(x => x.details.high))
       val avg = builder.add(Flow[Candle].map(x => (x.details.high - x.details.low) / 2))
 
+//      val maxAllTime = builder.add(Flow[Candle].reduce((value, x) => (if (x.details.low > value) x.details.low else value)))
+
       val output = builder.add(Sink.foreach[Data](x => producer.send(
-        new ProducerRecord[String, String]("javaToScala", x.toString)
+        new ProducerRecord[String, String](topic, x.toString)
       )))
 
       val broadcast = builder.add(Broadcast[Candle](4))

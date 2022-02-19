@@ -38,7 +38,7 @@ class KafkaConsumer[F[_]: ConcurrentEffect: Timer: ContextShift, M](
           .flatMap(_.stream)
           .evalMap { committable =>
             for {
-              _ <- logging.info(s"Received message. Topic: ${config.topic}. Key: ${committable.record.key}")
+              _ <- logging.info(s"Received message. Topic: ${config.topic}. Key: ${committable.record.key}. Value: ${committable.record.value}")
               _ <- handler(committable.record.value).onError {
                 case e => logging.errorCause("Error while processing message", e)
               }
