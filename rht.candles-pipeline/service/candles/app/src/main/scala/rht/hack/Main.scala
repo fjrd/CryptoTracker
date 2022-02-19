@@ -57,7 +57,7 @@ object Main extends HackathonApp {
       import akka.stream.scaladsl.GraphDSL.Implicits._
 
       val outputHack: SinkShape[Candle] = builder.add(Sink.foreach[Candle](x => producer.send {
-        new ProducerRecord[String, String](topic, x.asJson)
+        new ProducerRecord[String, String](topic, x.asJson.toString.replace(" milliseconds", ""))//Crutch for one type
       }))
 
 
