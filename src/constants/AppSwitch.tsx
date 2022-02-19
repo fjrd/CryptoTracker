@@ -16,7 +16,6 @@ const AppSwitch: React.FC = () => {
       <Route exact path={routes.main}>
         <MainPage />
       </Route>
-
       <Route path={routes.login}>
         <LoginForm />
       </Route>
