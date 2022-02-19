@@ -6,10 +6,6 @@ spring:
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
 
-#  data:
-#    rest:
-#      detection-strategy: annotated
-
   jpa:
     show-sql: true
     properties:
@@ -24,27 +20,5 @@ spring:
   liquibase:
     enabled: true
     change-log: db/changelog/db.changelog-master.xml
-    #REMOVE ME
-    drop-first: true
+    drop-first: false
 
-#  redis:
-#    host: ${REDIS_HOST:localhost}
-#    port: ${REDIS_PORT:6379}
-
-#  kafka:
-#    producer:
-#      bootstrap-servers: ${KAFKA_HOST_NAME:localhost:9092}
-#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-#
-#    consumer:
-#      bootstrap-servers: ${KAFKA_HOST_NAME:localhost:9092}
-#      group-id: orders
-#      auto-offset-reset: earliest
-#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-#      properties:
-#        spring:
-#          json:
-#            trusted:
-#              packages: "*"

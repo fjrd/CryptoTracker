@@ -42,7 +42,6 @@ services:
     depends_on:
       - kafka
       - postgres-coin-store
-#      - redis
     ports:
     - 8082:8082
     environment:
@@ -52,8 +51,19 @@ services:
       - POSTGRES_PASSWORD=postgres
       - KAFKA_HOST_NAME=nf-kafka:9092
       - CANDLE_STREAM_TOPIC=CandleTopic
-#      - REDIS_HOST=nf-redis
-#      - REDIS_PORT=6379
+
+  #Pipeline
+  pipeline:
+    container_name: pipeline
+    image: pipeline:0.0.1
+    build:
+      context: rht.candles-pipeline
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+    environment:
+      - topic_server=CandleTopic
+      - bootstrap_server=nf-kafka:9092
 
   #Kafka
   zookeeper:
@@ -83,14 +93,6 @@ services:
     restart: unless-stopped
     volumes:
       - kafka:/kafka
-#
-#  #Redis
-#  redis:
-#    container_name: nf-redis
-#    image: redis:alpine
-#    ports:
-#      - 6379:6379
-
 
   #Customers DataBase
   postgres-customers:
