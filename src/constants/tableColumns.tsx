@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 
 import { fixLongPrice } from "../utils/helperFunctions";
@@ -37,13 +38,12 @@ const PriceChange24h = styled(BaseCellFont)<{ price: number }>`
   }};
 `;
 
-export const tableColumns = [
+export const tableColumns: any = [
   {
     title: "",
     dataIndex: "image",
     key: "id",
-    render: (imgUrl: string, record: any, index: any) => {
-      console.log(imgUrl, record, index);
+    render: (imgUrl: string) => {
       return <ColumnFavorite imgUrl={imgUrl} />;
     },
   },
@@ -52,6 +52,10 @@ export const tableColumns = [
     dataIndex: "name",
     key: "id",
     render: (name: string) => <CoinName>{name}</CoinName>,
+    sorter: {
+      compare: (a: Record<string, string>, b: Record<string, string>) =>
+        a.name.localeCompare(b.name),
+    },
   },
   {
     title: "Symbol",
@@ -66,15 +70,21 @@ export const tableColumns = [
     render: (currentPrice: string) => (
       <BaseCellFont>{currentPrice}</BaseCellFont>
     ),
+    sorter: {
+      compare: (a: Record<string, number>, b: Record<string, number>) =>
+        a.current_price - b.current_price,
+    },
   },
   {
     title: "Change 24h",
     dataIndex: "price_change_24h",
     key: "id",
     render: (price: number) => {
-      return (
-        <PriceChange24h price={price}>{fixLongPrice(price)}</PriceChange24h>
-      );
+      return <PriceChange24h price={price}>{price}</PriceChange24h>;
+    },
+    sorter: {
+      compare: (a: Record<string, number>, b: Record<string, number>) =>
+        a.price_change_24h - b.price_change_24h,
     },
   },
 ];

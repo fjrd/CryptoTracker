@@ -19,6 +19,7 @@ export type InputFieldTypes = {
   type?: string;
   paddingLeft?: string;
   paddingRight?: string;
+  onChange?: (e: Record<string, any>) => void;
 };
 
 export type ItemFormTypes = {

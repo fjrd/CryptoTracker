@@ -17,12 +17,16 @@ export const actionLoginUser = (data: any, form: FormInstance) => {
       console.log(`log! data:${JSON.stringify(data)}`);
       return postLoginUserData(data)
         .then((res) => {
-          console.log(res);
+          console.log(`login res: ${JSON.stringify(res.data)}`);
           if (!res.data) dispatch(actionAuthFailure(res.statusText));
           else {
-            if (data.rememberMe)
-              localStorage.setItem("userToken", res.data.token);
-
+            localStorage.setItem("userToken", res.data.token);
+            console.log(`res.data.token:${res.data.token}`);
+            console.log(
+              `получаю токен который ток добавил:${localStorage.getItem(
+                "userToken"
+              )}`
+            );
             (
               api.defaults.headers as any
             ).Authorization = `Bearer ${res.data.token}`;

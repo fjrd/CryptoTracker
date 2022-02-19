@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import HeaderLogoSection from "./HeaderLogoSection/HeaderLogoSection";
-import HeaderNavigation from "./HeaderNavigation/HeaderNavigation";
+import HeaderInteractive from "./HeaderInteractive/HeaderInteractive";
 
-import BaseContainer from "../../containers/baseContainer";
+import BaseContainer from "../../../containers/baseContainer";
 
-import { headerOnScroll } from "../../utils/markup/headerMarkup";
-import { scrollTopNoOffset, scrollTopOffset } from "../../constants/constants";
+import { headerOnScroll } from "../../../utils/markup/headerMarkup";
+import {
+  scrollTopNoOffset,
+  scrollTopOffset,
+} from "../../../constants/constants";
 
 const HeaderElement = styled.header<{ isShrunk?: boolean }>`
   position: fixed;
@@ -70,7 +73,7 @@ const Header = () => {
     <HeaderElement isShrunk={isShrunk}>
       <Container>
         <HeaderLogoSection />
-        <HeaderNavigation />
+        <HeaderInteractive />
       </Container>
     </HeaderElement>
   );
