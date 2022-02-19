@@ -5,19 +5,20 @@ import {
   REGISTRATION_SUCCESS,
   LOGIN_SUCCESS,
   AUTH_FAILURE,
+  LOGOUT,
 } from "../../constants/actionTypes";
 
 type initialStateType = {
   userName: string;
   loading: boolean;
   userData: any;
-  authError: boolean | null;
+  authError: boolean;
   errorMessage: string;
   userId: string;
 };
 
 const initialState: initialStateType = {
-  userName: "Ivan Ivanov",
+  userName: "your name",
   loading: false,
   userData: null,
   authError: false,
@@ -39,18 +40,18 @@ const authReducer = (
       return {
         ...state,
         loading: false,
-        authError: null,
+        authError: false,
         userData: action.payload,
-        userName: action.payload.fullName,
+        userName: action.payload.name,
         userId: action.payload.id,
       };
     case LOGIN_SUCCESS:
       return {
         ...state,
         loading: false,
-        authError: null,
+        authError: false,
         userData: action.payload,
-        userName: action.payload.fullName,
+        userName: action.payload.name,
         userId: action.payload.user_id,
       };
     case AUTH_FAILURE:
@@ -60,6 +61,8 @@ const authReducer = (
         authError: true,
         errorMessage: action.payload,
       };
+    case LOGOUT:
+      return { ...state, userData: null };
 
     default:
       return state;

@@ -61,9 +61,9 @@ const GlobalCryptoStats: React.FC = () => {
       <CardsAndImageContainer>
         <CardsContainer>
           <CardInfo title="Active cryptos" subtitle="more than 9,631" />
-          <CardInfo title="Active cryptos" subtitle="more than 9,631" />
-          <CardInfo title="Active cryptos" subtitle="more than 9,631" />
-          <CardInfo title="Active cryptos" subtitle="more than 9,631" />
+          <CardInfo title="Common market cap" subtitle="$2,021TR" />
+          <CardInfo title="Active markets" subtitle="more than 400" />
+          <CardInfo title="Average total 24h volume" subtitle=" $56.09B" />
         </CardsContainer>
         <GlobalStatsImage src={GlobalStatsImgSrc} alt="crypto world" />
       </CardsAndImageContainer>

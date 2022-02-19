@@ -4,4 +4,7 @@ export const routes = {
   registration: "/registration",
   chart: "/chart",
   profile: "/profile",
+  notFound: "*",
+  watchlist: "/watchlist",
+  coinInfo: "/coins/:id",
 };

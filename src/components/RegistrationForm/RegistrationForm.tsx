@@ -1,40 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import { Redirect, useLocation } from "react-router";
 import { Form } from "antd";
 import { MailOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
-
 import { validatePassword } from "../../utils/helperFunctions";
-
-// import AuthError from '../../../../components/AuthError/AuthError';
-
-// import { RegistrationDataTypes } from '../../../../types/registrationDataTypes';
+import swal from "sweetalert";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
-
-// import { actionUpdateRegistrationForm } from '../../../../redux/actions/actionCreators';
-
 import ItemForm from "../ItemForm/ItemForm";
-
 import InputField from "../InputField/InputField";
-
 import FormButton from "../FormButton/FormButton";
-
 import FormContainer from "../../containers/formContainer";
 import FormHeader from "../FormHeader/FormHeader";
 import { actionRegisterUser } from "../../redux/actions/actionRegisterUser";
-import { getAuthLoadingState } from "../../redux/selectors/selectors";
+import {
+  getAuthErrorState,
+  getAuthLoadingState,
+  getCurrentUserData,
+} from "../../redux/selectors/selectors";
+import { routes } from "../../constants/routes";
+import styled from "styled-components";
+
+const AlertText = styled.p`
+  color: #b41919;
+`;
 
 const RegistrationForm: React.FC = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const loading = useSelector(getAuthLoadingState);
-  // const registrationError = useSelector(getAuthErrorState);
 
-  let formSubmitElement = <FormButton>Sign Up</FormButton>;
+  const location: Record<string, any> = useLocation();
+  const currentUser = useSelector(getCurrentUserData);
+  const registrationError = useSelector(getAuthErrorState);
+
+  const [error, setError] = useState(registrationError);
+
+  let formSubmitElement = registrationError ? (
+    <FormButton>
+      <AlertText>Ошибка!Повторите ввод</AlertText>
+    </FormButton>
+  ) : (
+    <FormButton>login</FormButton>
+  );
 
   if (loading) formSubmitElement = <LoadingSpinner />;
 
-  // if (registrationError) return <AuthError authTitle="Ошибка Регистрации" />;
+  if (localStorage.getItem("userToken") || currentUser) {
+    if (location.state?.backpath)
+      return <Redirect to={location.state.backpath} />;
+
+    return <Redirect to={routes.profile} />;
+  }
 
   const onFinish = (values: any) => {
     dispatch(actionRegisterUser(values, form));

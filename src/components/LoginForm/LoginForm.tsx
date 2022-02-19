@@ -1,40 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-
+import { useHistory, useLocation, Redirect } from "react-router-dom";
 import { Form } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
-
-// import { LoginDataTypes } from '../../../../types/loginDataTypes';
-// import { actionLoginUser } from '../../../../redux/actions/actionLoginUser';
-// import AuthError from '../../../../components/AuthError/AuthError';
-
+import swal from "sweetalert";
 import { actionLoginUser } from "../../redux/actions/actionLoginUser";
-
 import { routes } from "../../constants/routes";
-
+import { getAuthErrorState } from "../../redux/selectors/selectors";
 import ItemForm from "../ItemForm/ItemForm";
-
 import InputField from "../InputField/InputField";
-
 import FormButton from "../FormButton/FormButton";
-
 import FormContainer from "../../containers/formContainer";
-
-// import RequestRegistration from '../RequestRegistration/RequestRegistration';
-
 import CheckboxField from "../CheckboxField/CheckboxField";
-
 import { validatePassword } from "../../utils/helperFunctions";
 import FormHeader from "../FormHeader/FormHeader";
-import { useHistory } from "react-router-dom";
-import { getAuthLoadingState } from "../../redux/selectors/selectors";
 
-// import { getAuthErrorState, getAuthLoadingState } from '../../../../redux/selectors/selectors';
-
-// styles for prefix(icon) inside input
+import {
+  getAuthLoadingState,
+  getCurrentUserData,
+} from "../../redux/selectors/selectors";
 
 const DontHaveAccount = styled.div`
   display: flex;
@@ -63,18 +49,35 @@ const CreateAccountLink = styled(CreateAccountRequest)`
   }
 `;
 
+const AlertText = styled.p`
+  color: #b41919;
+`;
 const LoginForm: React.FC = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const history = useHistory();
   const loading = useSelector(getAuthLoadingState);
-  // const loginError = useSelector(getAuthErrorState);
 
-  let formSubmitElement = <FormButton>Login</FormButton>;
+  const location: Record<string, any> = useLocation();
+  const currentUser = useSelector(getCurrentUserData);
+  const loginError = useSelector(getAuthErrorState);
+
+  let formSubmitElement = loginError ? (
+    <FormButton>
+      <AlertText>Ошибка!Повторите ввод</AlertText>
+    </FormButton>
+  ) : (
+    <FormButton>login</FormButton>
+  );
 
   if (loading) formSubmitElement = <LoadingSpinner />;
 
-  // if (loginError) return <AuthError authTitle="Ошибка Входа!" />;
+  if (localStorage.getItem("userToken") || currentUser) {
+    if (location.state?.backpath)
+      return <Redirect to={location.state.backpath} />;
+
+    return <Redirect to={routes.profile} />;
+  }
 
   const onFinish = (values: any) => {
     dispatch(actionLoginUser(values, form));

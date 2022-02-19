@@ -16,6 +16,7 @@ const actionGetCoins = () => {
     try {
       getCoins()
         .then((response) => {
+          console.log(response.data);
           dispatch(actionGetCoinsSuccess(response.data));
         })
         .catch((error) => {

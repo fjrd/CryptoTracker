@@ -30,7 +30,7 @@ const HeaderElement = styled.header<{ isShrunk?: boolean }>`
 
 const Container = styled(BaseContainer)`
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
 
   height: 100%;

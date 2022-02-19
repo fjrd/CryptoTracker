@@ -41,7 +41,7 @@ const InputElement = styled(Input)<{
   width: 100%;
   border-radius: 16px;
   border: none;
-  background: #f0f0f0;
+  background: #e2e2e2;
   font-size: 1.5rem;
 
   & input {
@@ -51,7 +51,7 @@ const InputElement = styled(Input)<{
 `;
 
 const InputField: React.FC<InputFieldTypes> = (
-  { label, name, rules, placeholder, suffix, disabled, type },
+  { label, name, rules, placeholder, suffix, disabled, type, onChange },
   props
 ) => {
   const { paddingLeft, paddingRight } = props;
@@ -59,6 +59,7 @@ const InputField: React.FC<InputFieldTypes> = (
   return (
     <StyledFormItem label={label} name={name} rules={rules}>
       <InputElement
+        onChange={onChange}
         placeholder={placeholder}
         suffix={suffix}
         disabled={disabled}

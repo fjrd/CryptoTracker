@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useHistory } from "react-router";
 
 import NoActiveSrc from "../../assets/table/star-not-active.png";
 import ActiveSrc from "../../assets/table/star-active.png";
+
+import { routes } from "./../../constants/routes";
 
 let starIconSrc = {
   src: NoActiveSrc,
@@ -26,13 +29,15 @@ const ColumnFavoriteWrapper = styled.div`
 `;
 
 const ColumnFavorite: React.FC<{ imgUrl: string }> = ({ imgUrl }) => {
+  const history = useHistory();
   const [favorite, setFavorite] = useState(false);
   starIconSrc.src = favorite ? ActiveSrc : NoActiveSrc;
   return (
     <ColumnFavoriteWrapper>
       <FavoriteIcon
         onClick={() => {
-          setFavorite(!favorite);
+          if (localStorage.getItem("userToken")) setFavorite(!favorite);
+          else history.push(routes.login);
         }}
         src={starIconSrc.src}
         alt="favorite"
