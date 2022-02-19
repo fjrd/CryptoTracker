@@ -4,6 +4,7 @@ services:
   #ApiGateway
   gateway:
     container_name: api-gateway-service
+    image: api-gateway-service:0.0.1
     build:
       context: api-gateway
       dockerfile: Dockerfile
@@ -17,7 +18,7 @@ services:
   #Customers
   customers:
     container_name: customers-service
-#    image: nf-customers-service:0.0.1
+    image: customers-service:0.0.1
     build:
       context: customers-service
       dockerfile: Dockerfile
@@ -34,6 +35,7 @@ services:
   #CoinStore
   coin-store:
     container_name: coin-store-service
+    image: coin-store-service:0.0.1
     build:
       context: coin-store
       dockerfile: Dockerfile

@@ -28,6 +28,8 @@ public class AuthenticationController {
         log.info("signId(), requestDto = {}", requestDto);
         ResponseCustomerDto responseCustomerDto = customerService.getCustomer(requestDto);
         String token = tokenProvider.createToken(responseCustomerDto);
-        return ResponseEntity.ok().header("Authorization", token).body(responseCustomerDto);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + token)
+                .body(responseCustomerDto.toBuilder().token("Bearer " + token).build());
     }
 }
