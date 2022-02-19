@@ -17,7 +17,7 @@ public class CandleConsumer {
     private final JsonMapper jsonMapper;
     private final CoinService coinService;
 
-    @KafkaListener(topics = "${kafka.candle-stream-topic")
+    @KafkaListener(topics = "#{'${kafka.candle-stream-topic}'}")
     public void consume(String message){
         log.info("consume(), message = {}", message);
         try {

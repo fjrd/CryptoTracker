@@ -18,10 +18,10 @@ public class GatewayConfig {
     @Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("auth", r -> r.path("/api/v1/**")
+                .route("auth", r -> r.path("/api/v1/auth/**")
                         .filters(f -> f.filter(authFilter))
                         .uri(properties.getCustomersHost()))
-                .route("auth2", r -> r.path("/api/v1/coin/**")
+                .route("auth2", r -> r.path("/api/v1/candle/**")
                         .filters(f -> f.filter(authFilter))
                         .uri(properties.getCoinStoreHost()))
                 .build();

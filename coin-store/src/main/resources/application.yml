@@ -33,12 +33,12 @@ spring:
 
   kafka:
     producer:
-      bootstrap-servers: ${KAFKA_HOST_NAME:localhost:9092}
+      bootstrap-servers: ${KAFKA_HOST_NAME:localhost:9093}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
     consumer:
-      bootstrap-servers: ${KAFKA_HOST_NAME:localhost:9092}
+      bootstrap-servers: ${KAFKA_HOST_NAME:localhost:9093}
       group-id: orders
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -50,4 +50,4 @@ spring:
               packages: "*"
 
 kafka:
-  candle-stream-topic: ${CANDLE_STREAM_TOPIC:KandleStreamTopik}
+  candle-stream-topic: ${CANDLE_STREAM_TOPIC:CandleStreamTopic}
