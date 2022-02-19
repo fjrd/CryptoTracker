@@ -24,12 +24,8 @@ spring:
   liquibase:
     enabled: true
     change-log: db/changelog/db.changelog-master.xml
-    #REMOVE ME
-    drop-first: true
+    drop-first: false
 
-#  redis:
-#    host: ${REDIS_HOST:localhost}
-#    port: ${REDIS_PORT:6379}
 
   kafka:
     producer:

@@ -12,7 +12,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -30,10 +32,7 @@ public class CustomersServiceImpl implements CustomersService {
                 .orElseThrow(() -> new EntityNotFoundException("No such customer with login = " + requestDto.getLogin()));
         if(!bCryptPasswordEncoder.matches(requestDto.getPassword(), customer.getPassword()))
             throw new BadCredentialsException("Login or password is wrong");
-        System.out.println(customer);
         ResponseCustomerDto responseCustomerDto = mapper.modelToResponseDto(customer);
-        System.out.println(responseCustomerDto);
-//        return mapper.modelToResponseDto(customer);
         return responseCustomerDto;
     }
 
@@ -42,7 +41,16 @@ public class CustomersServiceImpl implements CustomersService {
         log.info("signUp(), dto = {}", dto);
         Customer customer = mapper.signUpDtoToModel(dto);
         customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
+        if(repository.findCustomerByLogin(dto.getLogin()).isPresent())
+            throw new EntityExistsException("User with id = " + customer.getId() + " already exists");
         customer = repository.save(customer);
         return mapper.modelToResponseDto(customer);
+    }
+
+    @Override
+    public String getNameByUserId(UUID userId) {
+        Customer customer = repository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("No such customer with id = " + userId));
+        return customer.getName();
     }
 }

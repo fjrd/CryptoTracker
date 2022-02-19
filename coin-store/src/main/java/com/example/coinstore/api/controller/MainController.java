@@ -31,13 +31,6 @@ public class MainController {
     private final CandleService candleService;
     private final FavouriteService favouriteService;
 
-    //get 	/api/v1/candle/last_update?figi=btc
-    //get	/api/v1/candle/range?figi=btc&startDate=01-01-2021&endDate=02-02-2021
-    //
-    //get	/api/v1/favourits?userId=UUID							получение списка подписок
-    //post	/api/v1/favourits?userId=UUID&figi=btc				подписка
-    //delete	/api/v1/favourits?userId=UUID&figi=btc			отписка
-
     @GetMapping("/last_update")
     public ResponseCandleDto getLastCandleUpdateByFigi(@RequestParam String figi){
         log.info("getLastCandleUpdateByFigi(), figi = {}", figi);
