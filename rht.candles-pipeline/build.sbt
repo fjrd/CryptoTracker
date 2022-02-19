@@ -5,7 +5,8 @@ lazy val `candles` =
   ProjectBuilder
     .service("candles")
     .settings(
-      libraryDependencies ++= Dependencies.`akka-streams`
+      libraryDependencies ++= Dependencies.`akka-streams`,
+      libraryDependencies ++= Dependencies.tethys
     )
     .dependsOn(
       `domain-common`,

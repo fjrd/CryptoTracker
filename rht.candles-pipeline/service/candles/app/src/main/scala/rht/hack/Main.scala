@@ -9,6 +9,10 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringSerializer
 import rht.common.domain.candles.Candle
 import rht.common.domain.candles.common.Figi
+import tethys.JsonObjectWriter.lowPriorityWriter
+import tethys._
+import tethys.derivation.auto.jsonWriterMaterializer
+import tethys.jackson._
 
 import scala.concurrent.duration._
 /**
@@ -18,8 +22,6 @@ import scala.concurrent.duration._
   * but the final entry point must be this one!
   */
 object Main extends HackathonApp {
-
-  final case class Data(figi: Figi, max: BigDecimal, min: BigDecimal, avg: BigDecimal, timestamp: Long)
 
   /**
     * Your "main" function
@@ -54,38 +56,14 @@ object Main extends HackathonApp {
     val graph = GraphDSL.create() { implicit builder: GraphDSL.Builder[NotUsed] =>
       import akka.stream.scaladsl.GraphDSL.Implicits._
 
-      val memoryStore = scala.collection.mutable.ListBuffer[Candle]()
-
-      val max = Source
-        .tick(
-          1.second,
-          60.second,
-          {
-            if (memoryStore.nonEmpty) {
-              val max = memoryStore.reduce[Candle]((prev, next) => if (prev.details.high < next.details.high) next else prev)
-              Data(max.figi, max.details.high, max.details.low, (max.details.high - max.details.low) / 2, System.currentTimeMillis()).toString
-            } else {
-              "null"
-            }
-          }
-        )
-
-      max.runForeach(x => println("fsdfsdf" + x))
-
-      val outputMax: SinkShape[Candle] = builder.add(Sink.foreach[Candle](x => producer.send {
-        new ProducerRecord[String, String](topic, if (memoryStore.nonEmpty) {
-          val max = memoryStore.reduce[Candle]((prev, next) => if (prev.details.high < next.details.high) next else prev)
-          Data(max.figi, max.details.high, max.details.low, (max.details.high - max.details.low) / 2, System.currentTimeMillis()).toString
-        } else {
-          "null"
-        })
+      val outputHack: SinkShape[Candle] = builder.add(Sink.foreach[Candle](x => producer.send {
+        new ProducerRecord[String, String](topic, x.asJson)
       }))
 
-      val output2 = builder.add(Flow[Candle].map(x => {memoryStore.append(x); x}))
 
-      val broadcast = builder.add(Broadcast[Candle](2))
+      val broadcast = builder.add(Broadcast[Candle](1))
 
-      broadcast.out(0) ~> output2 ~> outputMax
+      broadcast.out(0) ~> outputHack
 
       SinkShape(broadcast.in)
     }
