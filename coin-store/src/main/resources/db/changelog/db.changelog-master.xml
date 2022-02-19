@@ -10,10 +10,10 @@
     </changeSet>
 
     <include file="2022/02/19-01-changelog.xml" relativeToChangelogFile="true"/>
+    <include file="2022/02/19-02-changelog.xml" relativeToChangelogFile="true"/>
 
     <changeSet id="db-v-1.0" author="Alexander Reztsov">
         <tagDatabase tag="db-v-1.0"/>
     </changeSet>
 
 </databaseChangeLog>
-

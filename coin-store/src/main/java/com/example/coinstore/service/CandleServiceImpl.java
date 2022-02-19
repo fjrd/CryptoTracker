@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CoinServiceImpl implements CoinService{
+public class CandleServiceImpl implements CandleService {
 
     private final CandleRepository repository;
     private final CandleMapper mapper;

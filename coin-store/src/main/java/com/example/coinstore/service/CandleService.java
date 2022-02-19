@@ -6,7 +6,7 @@ import com.example.coinstore.api.dto.ResponseCandleDto;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface CoinService {
+public interface CandleService {
     void saveFromKafka(CandleMessageDto dto);
 
     ResponseCandleDto getLastCandleUpdateByFigi(String figi);

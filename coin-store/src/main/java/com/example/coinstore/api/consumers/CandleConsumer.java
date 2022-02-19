@@ -1,7 +1,7 @@
 package com.example.coinstore.api.consumers;
 
 import com.example.coinstore.api.consumers.dto.CandleMessageDto;
-import com.example.coinstore.service.CoinService;
+import com.example.coinstore.service.CandleService;
 import com.example.coinstore.service.mapper.common.JsonMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class CandleConsumer {
 
     private final JsonMapper jsonMapper;
-    private final CoinService coinService;
+    private final CandleService candleService;
 
     @KafkaListener(topics = "#{'${kafka.candle-stream-topic}'}")
     public void consume(String message){
@@ -23,7 +23,7 @@ public class CandleConsumer {
         try {
 
             CandleMessageDto dto = (CandleMessageDto) jsonMapper.mapStringToObject(message, CandleMessageDto.class);
-            coinService.saveFromKafka(dto);
+            candleService.saveFromKafka(dto);
 
         } catch (JsonProcessingException e) {
             log.error("Couldn't parse string to dto, " + e.getMessage());
