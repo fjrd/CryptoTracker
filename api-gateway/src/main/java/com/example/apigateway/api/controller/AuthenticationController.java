@@ -30,6 +30,6 @@ public class AuthenticationController {
         String token = tokenProvider.createToken(responseCustomerDto);
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + token)
-                .body(responseCustomerDto.toBuilder().token("Bearer " + token).build());
+                .body(responseCustomerDto.toBuilder().token(token).build());
     }
 }
