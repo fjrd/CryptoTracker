@@ -32,9 +32,8 @@ object Main extends HackathonApp {
     val bootstrapServer = sys.env("bootstrap_server")
 
     println(topic + " topic")
-    println(bootstrapServer + "bootstrapServer")
+    println(bootstrapServer + " bootstrapServer")
 
-    //Как использовать KafkaProducer?
     val configProducer = system.settings.config.getConfig("akka.kafka.producer")
     val producer =
       ProducerSettings(configProducer, new StringSerializer, new StringSerializer)
@@ -59,8 +58,6 @@ object Main extends HackathonApp {
       val min = builder.add(Flow[Candle].map(x => x.details.low))
       val max = builder.add(Flow[Candle].map(x => x.details.high))
       val avg = builder.add(Flow[Candle].map(x => (x.details.high - x.details.low) / 2))
-
-//      val maxAllTime = builder.add(Flow[Candle].reduce((value, x) => (if (x.details.low > value) x.details.low else value)))
 
       val output = builder.add(Sink.foreach[Data](x => producer.send(
         new ProducerRecord[String, String](topic, x.toString)
