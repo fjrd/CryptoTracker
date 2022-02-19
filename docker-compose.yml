@@ -14,6 +14,7 @@ services:
       - SERVER_PORT=8080
       - CUSTOMERS_HOST=http://customers-service:8081
       - COIN_STORE_HOST=http://coin-store-service:8082
+    restart: always
 
   #Customers
   customers:
@@ -31,6 +32,7 @@ services:
       - POSTGRES_URL=jdbc:postgresql://pg-customers-db:5432/postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    restart: always
 
   #CoinStore
   coin-store:
@@ -51,6 +53,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - KAFKA_HOST_NAME=nf-kafka:9092
       - CANDLE_STREAM_TOPIC=CandleTopic
+    restart: always
 
   #Pipeline
   pipeline:
@@ -64,6 +67,7 @@ services:
     environment:
       - topic_server=CandleTopic
       - bootstrap_server=nf-kafka:9092
+    restart: always
 
   #Kafka
   zookeeper:
@@ -71,6 +75,7 @@ services:
     container_name: nf-zookeeper
     expose:
       - 2181
+    restart: always
     volumes:
       - zookeeper-data:/data
       - zookeeper-datalog:/datalog
@@ -90,7 +95,7 @@ services:
       KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    restart: unless-stopped
+    restart: always
     volumes:
       - kafka:/kafka
 
@@ -104,7 +109,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
-    restart: unless-stopped
+    restart: always
     volumes:
       - pg-customers-data:/var/lib/postgresql/data/
 
@@ -118,7 +123,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
-    restart: unless-stopped
+    restart: always
     volumes:
       - pg-coin-store-data:/var/lib/postgresql/data/
 
