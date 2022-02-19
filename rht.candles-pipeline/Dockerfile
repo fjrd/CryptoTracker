@@ -25,5 +25,4 @@ VOLUME [ "/root/rht" ]
 WORKDIR /root/rht
 COPY . /root/rht
 
-ENTRYPOINT [ "sbt" ]
-CMD ["candles/reStart"]
+ENTRYPOINT [ "sbt", "candles/reStart", "console" ]
