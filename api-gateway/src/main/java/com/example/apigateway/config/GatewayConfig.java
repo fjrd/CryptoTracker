@@ -21,9 +21,9 @@ public class GatewayConfig {
                 .route("auth", r -> r.path("/api/v1/**")
                         .filters(f -> f.filter(authFilter))
                         .uri(properties.getCustomersHost()))
-//                .route("auth2", r -> r.path("/api/v1/coins/**")
-//                        .filters(f -> f.filter(authFilter))
-//                        .uri(properties.getCoinStoreHost()))
+                .route("auth2", r -> r.path("/api/v1/coin/**")
+                        .filters(f -> f.filter(authFilter))
+                        .uri(properties.getCoinStoreHost()))
                 .build();
 
     }

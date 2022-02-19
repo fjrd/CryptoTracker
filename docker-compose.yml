@@ -27,31 +27,30 @@ services:
     ports:
       - 8081:8081
     environment:
+      - SERVER_PORT=8081
       - POSTGRES_URL=jdbc:postgresql://pg-customers-db:5432/postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - SERVER_PORT=8081
     command: [ 'java', '-jar', '/app.jar' ]
 
-#  #Orders
-#  orders:
-#    container_name: nf-orders-service
-#    image: nf-orders-service:0.0.1
-#    build:
-#      context: orders-service
-#      dockerfile: DockerfileCopyJar
-#    depends_on:
-#      - kafka
-#      - postgres-orders
+  #CoinStore
+  coin-store:
+    container_name: coin-store-service
+    build:
+      context: coin-store
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+      - postgres-orders
 #      - redis
-#    ports:
-#    - 8081:8081
-#    environment:
-#      - SERVER_PORT=8081
-#      - POSTGRES_URL=jdbc:postgresql://nf-pg-orders-db:5432/postgres
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=postgres
-#      - KAFKA_HOST_NAME=nf-kafka:9092
+    ports:
+    - 8082:8082
+    environment:
+      - SERVER_PORT=8082
+      - POSTGRES_URL=jdbc:postgresql://pg-coin-store-db:5432/postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - KAFKA_HOST_NAME=nf-kafka:9092
 #      - REDIS_HOST=nf-redis
 #      - REDIS_PORT=6379
 #
@@ -144,19 +143,6 @@ services:
 #    ports:
 #      - 6379:6379
 
-#  #Orders DataBase
-#  postgres-orders:
-#    container_name: nf-pg-orders-db
-#    image: postgres:alpine3.14
-#    ports:
-#      - 5433:5432
-#    environment:
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=postgres
-#      - POSTGRES_DB=postgres
-#    restart: unless-stopped
-#    volumes:
-#      - pg-customers-data:/var/lib/postgresql/data/
 
   #Customers DataBase
   postgres-customers:
@@ -171,6 +157,20 @@ services:
     restart: unless-stopped
     volumes:
       - pg-customers-data:/var/lib/postgresql/data/
+
+  #Coin store DataBase
+  postgres-coin-store:
+    container_name: pg-coin-store-db
+    image: postgres:alpine3.14
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    restart: unless-stopped
+    volumes:
+      - pg-coin-store-data:/var/lib/postgresql/data/
 
 #  #Restaurant DataBase
 #  postgres-restaurant:
@@ -204,7 +204,6 @@ volumes:
   kafka:
   zookeeper-data:
   zookeeper-datalog:
-  pg-orders-data:
+  pg-coin-store-data:
   pg-customers-data:
-  pg-restaurant-data:
-  pg-delivery-data:
+
