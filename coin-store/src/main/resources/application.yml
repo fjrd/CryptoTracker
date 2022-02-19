@@ -22,8 +22,7 @@ spring:
       ddl-auto: validate
 
   liquibase:
-#    FALSE
-    enabled: false
+    enabled: true
     change-log: db/changelog/db.changelog-master.xml
     #REMOVE ME
     drop-first: true
@@ -49,3 +48,6 @@ spring:
           json:
             trusted:
               packages: "*"
+
+kafka:
+  candle-stream-topic: ${CANDLE_STREAM_TOPIC:KandleStreamTopik}

@@ -13,7 +13,6 @@ services:
       - SERVER_PORT=8080
       - CUSTOMERS_HOST=http://customers-service:8081
       - COIN_STORE_HOST=http://coin-store-service:8082
-    command: [ 'java', '-jar', '/app.jar' ]
 
   #Customers
   customers:
@@ -31,7 +30,6 @@ services:
       - POSTGRES_URL=jdbc:postgresql://pg-customers-db:5432/postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    command: [ 'java', '-jar', '/app.jar' ]
 
   #CoinStore
   coin-store:
@@ -51,61 +49,9 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - KAFKA_HOST_NAME=nf-kafka:9092
+      - CANDLE_STREAM_TOPIC=CandleTopic
 #      - REDIS_HOST=nf-redis
 #      - REDIS_PORT=6379
-#
-#  #Restaurant
-#  restaurant:
-#    container_name: nf-restaurant-service
-#    image: nf-restaurant-service:0.0.1
-#    build:
-#      context: restaurant-service
-#      dockerfile: DockerfileCopyJar
-#    depends_on:
-#      - kafka
-#      - postgres-restaurant
-#    ports:
-#      - 8082:8082
-#    environment:
-#      - SERVER_PORT=8082
-#      - POSTGRES_URL=jdbc:postgresql://nf-pg-restaurant-db:5432/postgres
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=postgres
-#      - KAFKA_HOST_NAME=nf-kafka:9092
-#
-#  #Processor
-#  processor:
-#    container_name: nf-processor-service
-#    image: nf-processor-service:0.0.1
-#    build:
-#      context: processor-service
-#      dockerfile: DockerfileCopyJar
-#    depends_on:
-#      - kafka
-#      - redis
-#    environment:
-#      - KAFKA_HOST_NAME=nf-kafka:9092
-#      - REDIS_HOST=nf-redis
-#      - REDIS_PORT=6379
-#
-#  #Delivery
-#  delivery:
-#    container_name: nf-delivery-service
-#    image: nf-delivery-service:0.0.1
-#    build:
-#      context: delivery-service
-#      dockerfile: DockerfileCopyJar
-#    depends_on:
-#      - kafka
-#      - postgres-delivery
-#    ports:
-#      - 8085:8085
-#    environment:
-#      - SERVER_PORT=8085
-#      - POSTGRES_URL=jdbc:postgresql://nf-pg-delivery-db:5432/postgres
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=postgres
-#      - KAFKA_HOST_NAME=nf-kafka:9092
 
   #Kafka
   zookeeper:
@@ -171,34 +117,6 @@ services:
     restart: unless-stopped
     volumes:
       - pg-coin-store-data:/var/lib/postgresql/data/
-
-#  #Restaurant DataBase
-#  postgres-restaurant:
-#    container_name: nf-pg-restaurant-db
-#    image: postgres:alpine3.14
-#    ports:
-#      - 5434:5432
-#    environment:
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=postgres
-#      - POSTGRES_DB=postgres
-#    restart: unless-stopped
-#    volumes:
-#      - pg-restaurant-data:/var/lib/postgresql/data/
-#
-#  #Delivery DataBase
-#  postgres-delivery:
-#    container_name: nf-pg-delivery-db
-#    image: postgres:alpine3.14
-#    ports:
-#      - 5435:5432
-#    environment:
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=postgres
-#      - POSTGRES_DB=postgres
-#    restart: unless-stopped
-#    volumes:
-#      - pg-delivery-data:/var/lib/postgresql/data/
 
 volumes:
   kafka:

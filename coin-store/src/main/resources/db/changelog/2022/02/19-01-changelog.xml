@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+
+
+    <changeSet id="1645255061033-1" author="fjrd">
+        <createTable tableName="candles">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_candles"/>
+            </column>
+            <column name="figi" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="max" type="DECIMAL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="min" type="DECIMAL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="avg" type="DECIMAL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timestamp" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
