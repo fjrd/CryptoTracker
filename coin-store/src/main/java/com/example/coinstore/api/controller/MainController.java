@@ -5,6 +5,7 @@ import com.example.coinstore.service.CoinService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/candle")
