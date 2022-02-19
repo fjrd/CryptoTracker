@@ -9,6 +9,10 @@ import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringSerializer
 import rht.common.domain.candles.Candle
 import rht.common.domain.candles.common.Figi
+import tethys.JsonObjectWriter.lowPriorityWriter
+import tethys._
+import tethys.derivation.auto.jsonWriterMaterializer
+import tethys.jackson._
 
 /**
   * Program entry point
@@ -60,7 +64,7 @@ object Main extends HackathonApp {
       val avg = builder.add(Flow[Candle].map(x => (x.details.high - x.details.low) / 2))
 
       val output = builder.add(Sink.foreach[Data](x => producer.send(
-        new ProducerRecord[String, String](topic, x.toString)
+        new ProducerRecord[String, String](topic, x.asJson)
       )))
 
       val broadcast = builder.add(Broadcast[Candle](4))
