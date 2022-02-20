@@ -1,9 +1,9 @@
 import axios from "axios";
-// import { createBrowserHistory } from 'history';
+import { createBrowserHistory } from "history";
 
-// import store from '../redux/store';
+import store from "../redux/store";
 
-// import { logout } from './HelperFunctions/helperFunctions';
+import { logout } from "./helperFunctions";
 
 const token = localStorage.getItem("userToken");
 
@@ -12,11 +12,13 @@ export const apiCoinGecko = axios.create({
 });
 
 export const api = axios.create({
-  baseURL: "http://vm-8.tc.neoflex.cloud:8080",
+
+  baseURL: "http://37.144.170.60:12201",
+
   headers: { Authorization: `Bearer ${token}` },
 });
 
-/* api.interceptors.response.use(
+api.interceptors.response.use(
   (res) => {
     return res;
   },
@@ -28,7 +30,22 @@ export const api = axios.create({
 
     return Promise.reject(error);
   }
-); */
+);
+
+export const getCryptoCandleRange = (
+  figi: string,
+  startDate: string,
+  endDate: string
+) =>
+  api.get("/api/v1/candle/range", {
+    params: { figi: { figi }, startDate: { startDate }, endDate: { endDate } },
+  });
+
+export const postRegistrationUserData = (data: any) =>
+  api.post(`/api/v1/auth/sign_up`, data);
+
+export const postLoginUserData = (data: any) =>
+  api.post(`/api/v1/auth/sign_in`, data);
 
 export const postRegistrationUserData = (data: any) =>
   api.post(`/api/v1/auth/sign_up`, data);
@@ -40,6 +57,11 @@ export const getCoins = () =>
   apiCoinGecko.get("coins/markets/", {
     params: { vs_currency: "usd", per_page: 250 },
   });
+
+
+export const getSearchCoins = (query: string) =>
+  apiCoinGecko.get("/search/", { params: { query: { query } } });
+
 
 export const getClaims = (
   limit: number,

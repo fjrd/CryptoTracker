@@ -7,9 +7,14 @@ import axios from "axios";
 import { Table, Spin } from "antd";
 
 import actionGetCoins from "../../redux/actions/actionGetCoins";
+import actionGetSearchCoins from "../../redux/actions/actionGetSearchCoins";
+
 import { setPaginationStyles } from "../../constants/setPaginationStyles";
 
-import { getCoinList } from "../../redux/selectors/selectors";
+import {
+  getCoinList,
+  getSearchCoinList,
+} from "../../redux/selectors/selectors";
 
 import { tableColumns } from "../../constants/tableColumns";
 import BaseContainer from "../../containers/baseContainer";
@@ -22,6 +27,7 @@ import {
   getGetDataLoadingState,
 } from "../../redux/selectors/selectors";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import SearchPanel from "../SearchPanel/SearchPanel";
 
 const Spinner = (
   <LoadingOutlined style={{ fontSize: 34, color: "#7db59a" }} spin />
@@ -30,14 +36,33 @@ const Spinner = (
 const StyledTable = styled(Table)`
   width: 100%;
 
-  align-self: center;
+  margin-top: 30px;
 
-  margin-top: 50px;
+  width: 100%;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  .ant-pagination-item-ellipsis {
+    background: white;
+  }
+
+  .ant-spin-nested-loading {
+    width: 90%;
+  }
+
+  .ant-tooltip-open {
+    color: white;
+  }
 
   .ant-table-content {
     background-color: black;
   }
 
+  .ant-table-column-sort {
+    background-color: inherit;
+  }
   .ant-table-cell {
     border-bottom: 1px solid darkgray;
   }
@@ -71,23 +96,18 @@ const StyledTable = styled(Table)`
 `;
 
 const TableWrapper = styled(BaseContainer)`
-  .ant-table-wrapper {
-    width: 100%;
-    margin-top: 270px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-
-    .ant-spin-nested-loading {
-      width: 90%;
-    }
-  }
+  margin-top: 250px;
 `;
 
 const CoinList: React.FC = () => {
   const dispatch = useDispatch();
   const coinList = useSelector(getCoinList);
+  const searchCoinList = useSelector(getSearchCoinList);
 
   const loading = useSelector(getGetDataLoadingState);
   const error = useSelector(getGetDataErrorState);
@@ -101,14 +121,20 @@ const CoinList: React.FC = () => {
     };
   }
 
-  console.log(coinList);
-
   useEffect(() => {
     dispatch(actionGetCoins());
   }, []);
 
   return (
     <TableWrapper>
+      <SearchPanel
+        onChange={(e: Record<string, any>) => {
+          console.log(e.target.value);
+
+          dispatch(actionGetSearchCoins(e.target.value));
+          console.log(`searchCoinList:${searchCoinList}`);
+        }}
+      />
       <StyledTable
         dataSource={coinList}
         columns={tableColumns}

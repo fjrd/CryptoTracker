@@ -20,7 +20,9 @@ export const actionRegisterUser = (data: any, form: FormInstance) => {
       console.log(`reg! data:${JSON.stringify(data)}`);
       postRegistrationUserData(data)
         .then((res) => {
-          console.log(res.data.message);
+
+          console.log(res.data);
+
           if (!res.data) {
             dispatch(actionAuthFailure(res.statusText));
           } else {
@@ -28,6 +30,13 @@ export const actionRegisterUser = (data: any, form: FormInstance) => {
             (
               api.defaults.headers as any
             ).Authorization = `Bearer ${res.data.token}`;
+
+            console.log(
+              `получаю токен который только что впихнул :${localStorage.getItem(
+                "userToken"
+              )}`
+            );
+
 
             dispatch(actionRegistrationSuccess(res.data));
 
