@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 
 @Data
 @NoArgsConstructor
@@ -16,5 +15,5 @@ public class CandleMessageDto {
     BigDecimal max;
     BigDecimal min;
     BigDecimal avg;
-    Instant timestamp;
+    BigDecimal timestamp;
 }
