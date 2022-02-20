@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useHistory, useLocation, Redirect } from "react-router-dom";
 import { Form } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
-import swal from "sweetalert";
 import { actionLoginUser } from "../../redux/actions/actionLoginUser";
 import { routes } from "../../constants/routes";
 import { getAuthErrorState } from "../../redux/selectors/selectors";

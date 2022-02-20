@@ -2,6 +2,11 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
+<<<<<<< HEAD
+=======
+import axios from "axios";
+
+>>>>>>> 1fa2e89d771cc802b3f4a86fd5b779c7e63dfad2
 import { Table, Spin } from "antd";
 
 import actionGetCoins from "../../redux/actions/actionGetCoins";
@@ -41,6 +46,7 @@ const StyledTable = styled(Table)`
   display: flex;
   align-items: flex-start;
   justify-content: center;
+<<<<<<< HEAD
 
   .ant-pagination-item-ellipsis {
     background: white;
@@ -50,6 +56,17 @@ const StyledTable = styled(Table)`
     width: 90%;
   }
 
+=======
+
+  .ant-pagination-item-ellipsis {
+    background: white;
+  }
+
+  .ant-spin-nested-loading {
+    width: 90%;
+  }
+
+>>>>>>> 1fa2e89d771cc802b3f4a86fd5b779c7e63dfad2
   .ant-tooltip-open {
     color: white;
   }

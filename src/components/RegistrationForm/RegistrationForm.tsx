@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useLocation } from "react-router";
 import { Form } from "antd";
 import { MailOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
 import { validatePassword } from "../../utils/helperFunctions";
-import swal from "sweetalert";
 import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 import ItemForm from "../ItemForm/ItemForm";
 import InputField from "../InputField/InputField";
@@ -32,8 +31,6 @@ const RegistrationForm: React.FC = () => {
   const location: Record<string, any> = useLocation();
   const currentUser = useSelector(getCurrentUserData);
   const registrationError = useSelector(getAuthErrorState);
-
-  const [error, setError] = useState(registrationError);
 
   let formSubmitElement = registrationError ? (
     <FormButton>

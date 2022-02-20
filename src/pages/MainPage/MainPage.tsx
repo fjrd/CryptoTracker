@@ -19,9 +19,18 @@ const MainPageContainer = styled.div`
 
 const MainPage: React.FC = () => {
   const location: Record<string, any> = useLocation();
+<<<<<<< HEAD
 
   const currentUser = useSelector(getCurrentUserData);
 
+=======
+  // const history = useHistory();
+  const currentUser = useSelector(getCurrentUserData);
+
+  console.log(localStorage.getItem("userToken"));
+  console.log(currentUser);
+
+>>>>>>> 1fa2e89d771cc802b3f4a86fd5b779c7e63dfad2
   if (localStorage.getItem("userToken") || currentUser) {
     if (location.state?.backpath)
       return <Redirect to={location.state.backpath} />;

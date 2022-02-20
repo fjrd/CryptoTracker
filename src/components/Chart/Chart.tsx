@@ -32,9 +32,17 @@ const StockChart: FC<MyProps> = ({ name, data }) => {
       highcharts={Highcharts}
       constructorType={"stockChart"}
       options={options}
+<<<<<<< HEAD
       containerProps={{
         style: { height: "80%", width: "80%" },
       }}
+=======
+
+      containerProps={{
+        style: { height: "80%", width: "80%" },
+      }}
+
+>>>>>>> 1fa2e89d771cc802b3f4a86fd5b779c7e63dfad2
     />
   );
 };

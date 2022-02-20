@@ -34,6 +34,13 @@ export const actionRegisterUser = (data: any, form: FormInstance) => {
               )}`
             );
 
+            console.log(
+              `получаю токен который только что впихнул :${localStorage.getItem(
+                "userToken"
+              )}`
+            );
+
+
             dispatch(actionRegistrationSuccess(res.data));
 
             form.resetFields();

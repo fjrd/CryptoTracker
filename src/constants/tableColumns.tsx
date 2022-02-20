@@ -88,12 +88,15 @@ export const tableColumns: any = [
     sorter: {
       compare: (a: Record<string, number>, b: Record<string, number>) =>
         a.price_change_24h - b.price_change_24h,
+<<<<<<< HEAD
     },
   },
   {
     title: "More Info",
     render: (text: string, record: Record<string, any>) => {
       return <OpenCoinInfo coinId={record.id} />;
+=======
+>>>>>>> 1fa2e89d771cc802b3f4a86fd5b779c7e63dfad2
     },
   },
 ];
