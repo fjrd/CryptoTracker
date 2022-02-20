@@ -35,6 +35,6 @@ public class Customer implements Serializable {
     private String name;
 
     @Column(nullable = false)
-    private boolean rememberMe = false;
+    private boolean rememberMe;
 
 }

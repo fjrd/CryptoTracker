@@ -38,7 +38,7 @@ spring:
       group-id: orders
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       properties:
         spring:
           json:
@@ -46,4 +46,4 @@ spring:
               packages: "*"
 
 kafka:
-  candle-stream-topic: ${CANDLE_STREAM_TOPIC:CandleStreamTopic}
+  candle-stream-topic: ${CANDLE_STREAM_TOPIC:CandleTopic}

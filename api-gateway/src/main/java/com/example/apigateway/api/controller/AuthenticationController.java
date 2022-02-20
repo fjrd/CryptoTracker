@@ -1,6 +1,7 @@
 package com.example.apigateway.api.controller;
 
 import com.example.apigateway.api.dto.RequestCustomerSignInDto;
+import com.example.apigateway.api.dto.RequestCustomerSignUpDto;
 import com.example.apigateway.api.dto.ResponseCustomerDto;
 import com.example.apigateway.service.CustomerService;
 import com.example.apigateway.util.JwtTokenProvider;
@@ -28,7 +29,17 @@ public class AuthenticationController {
     @PostMapping("sign_in")
     public ResponseEntity<?> signIn(@RequestBody @Valid RequestCustomerSignInDto requestDto) {
         log.info("signId(), requestDto = {}", requestDto);
-        ResponseCustomerDto responseCustomerDto = customerService.getCustomer(requestDto);
+        ResponseCustomerDto responseCustomerDto = customerService.signIn(requestDto);
+        String token = tokenProvider.createToken(responseCustomerDto);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + token)
+                .body(responseCustomerDto.toBuilder().token(token).build());
+    }
+
+    @PostMapping("sign_up")
+    public ResponseEntity<?> signUp(@RequestBody @Valid RequestCustomerSignUpDto requestDto) {
+        log.info("signUp(), requestDto = {}", requestDto);
+        ResponseCustomerDto responseCustomerDto = customerService.signUp(requestDto);
         String token = tokenProvider.createToken(responseCustomerDto);
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + token)

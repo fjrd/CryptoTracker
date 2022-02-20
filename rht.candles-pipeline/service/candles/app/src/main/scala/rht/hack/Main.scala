@@ -2,7 +2,7 @@ package rht.hack
 
 import akka.actor.ActorSystem
 import akka.kafka.ProducerSettings
-import akka.stream.scaladsl.{Broadcast, Concat, Flow, GraphDSL, Sink, Source, Zip}
+import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Sink, Source, ZipWith}
 import akka.stream.{CompletionStrategy, OverflowStrategy, SinkShape}
 import akka.{Done, NotUsed}
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -14,7 +14,6 @@ import tethys._
 import tethys.derivation.auto.jsonWriterMaterializer
 import tethys.jackson._
 
-import scala.concurrent.duration._
 /**
   * Program entry point
   *
@@ -23,6 +22,7 @@ import scala.concurrent.duration._
   */
 object Main extends HackathonApp {
 
+  final case class Data(figi: Figi, max: BigDecimal, min: BigDecimal, avg: BigDecimal, timestamp: Long)
   /**
     * Your "main" function
     *
@@ -32,17 +32,19 @@ object Main extends HackathonApp {
   override def start(args: List[String]): SourceActor = {
     implicit val system: ActorSystem = ActorSystem()
 
-    val topic = sys.env.getOrElse("topic_server", "scalaToJava")//todo: test sbt candles/reStart
-    val bootstrapServer = sys.env.getOrElse("bootstrap_server", "localhost:9092")
+    val topic = sys.env("topic_server")
+    val bootstrapServer = sys.env("bootstrap_server")
 
     println(topic + " topic")
-    println(bootstrapServer + "bootstrapServer")
+    println(bootstrapServer + " bootstrapServer")
 
-    //Как использовать KafkaProducer?
     val configProducer = system.settings.config.getConfig("akka.kafka.producer")
     val producer =
       ProducerSettings(configProducer, new StringSerializer, new StringSerializer)
         .withBootstrapServers(bootstrapServer).createKafkaProducer()
+
+    def packaging(max: BigDecimal, min: BigDecimal, avg: BigDecimal, figi: Figi): Data =
+      Data(figi, max, min, avg, System.currentTimeMillis())
 
     val source = Source.actorRef(
       completionMatcher = {
@@ -56,15 +58,22 @@ object Main extends HackathonApp {
     val graph = GraphDSL.create() { implicit builder: GraphDSL.Builder[NotUsed] =>
       import akka.stream.scaladsl.GraphDSL.Implicits._
 
-      val outputHack: SinkShape[Candle] = builder.add(Sink.foreach[Candle](x => producer.send {
-        new ProducerRecord[String, String](topic, x.asJson.toString.replace(" milliseconds", ""))//Crutch for one type
-      }))
+      val id = builder.add(Flow[Candle].map(x => x.figi))
+      val min = builder.add(Flow[Candle].map(x => x.details.low))
+      val max = builder.add(Flow[Candle].map(x => x.details.high))
+      val avg = builder.add(Flow[Candle].map(x => (x.details.high - x.details.low) / 2))
 
+      val output = builder.add(Sink.foreach[Data](x => producer.send(
+        new ProducerRecord[String, String](topic, x.asJson)
+      )))
 
-      val broadcast = builder.add(Broadcast[Candle](1))
-
-      broadcast.out(0) ~> outputHack
-
+      val broadcast = builder.add(Broadcast[Candle](4))
+      val zip = builder.add(ZipWith[BigDecimal, BigDecimal, BigDecimal, Figi, Data](packaging))
+      broadcast.out(0) ~> max ~> zip.in0
+      broadcast.out(1) ~> min ~> zip.in1
+      broadcast.out(2) ~> avg ~> zip.in2
+      broadcast.out(3) ~> id ~> zip.in3
+      zip.out ~> output
       SinkShape(broadcast.in)
     }
     source.to(Sink.fromGraph(graph)).run()
