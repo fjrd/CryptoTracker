@@ -65,7 +65,7 @@ object SparkApp extends App {
     .format("kafka")
     .option("kafka.bootstrap.servers", brokers)
     .option("topic", topicOut)
-    .option("checkpointLocation", "./tmpCheckpoint")
+    .option("checkpointLocation", "/tmp/tmpCheckpoint")
     .start()
 
 
