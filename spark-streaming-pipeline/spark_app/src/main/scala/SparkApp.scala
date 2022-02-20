@@ -26,21 +26,9 @@ object SparkApp extends App {
   val schemaCandleDetails = ScalaReflection.schemaFor[CandleDetails].dataType.asInstanceOf[StructType]
 
   val topic = sys.env.getOrElse("topic_server", "scalaToJava")//todo: test sbt candles/reStart
+  val topicOut = sys.env.getOrElse("topic_server_out", "topicAggData")//todo: test sbt candles/reStart
   val brokers = sys.env.getOrElse("bootstrap_server", "localhost:9092")
 
-  private val properties = {
-    val properties = new Properties()
-    properties.put(BOOTSTRAP_SERVERS_CONFIG, brokers)
-    properties.put(ACKS_CONFIG, "all")
-    properties.put(RETRIES_CONFIG, 0)
-    properties.put(KEY_SERIALIZER_CLASS_CONFIG, classOf[LongSerializer])
-    properties.put(VALUE_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer])
-    properties
-  }
-
-  val x = s.replace(" second", "")
-
-  val producer = new KafkaProducer[Long, String](properties)
 
   val spark = SparkSession.builder
     .appName("spark-streaming-hw")
@@ -73,10 +61,10 @@ object SparkApp extends App {
     .toJSON
     .writeStream
     .outputMode("update")
-    .trigger(ProcessingTime("20 seconds"))
+    .trigger(ProcessingTime("60 seconds"))
     .format("kafka")
     .option("kafka.bootstrap.servers", brokers)
-    .option("topic", topic)
+    .option("topic", topicOut)
     .option("checkpointLocation", "./tmpCheckpoint")
     .start()
 
