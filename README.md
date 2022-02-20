@@ -3,7 +3,7 @@
 CryptoTracker = best service for tracking crypto currency =)
 
 ## Installation
-For starting all backend microservices you only need one command executed from root project
+For starting all backend microservices you only need toexecute one command in project root
 ```bash
 docker-compose -f docker-compose.yml up --build
 ```
