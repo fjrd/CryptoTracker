@@ -5,7 +5,9 @@ import { useSelector } from "react-redux";
 import MainPage from "../pages/MainPage/MainPage";
 import LoginForm from "../components/LoginForm/LoginForm";
 import RegistrationForm from "../components/RegistrationForm/RegistrationForm";
+
 import UserPage from "../pages/UserPage/UserPage";
+
 
 import PrivateRoute from "../components/PrivateRoute/PrivateRoute";
 
@@ -30,11 +32,13 @@ const AppSwitch: React.FC = () => {
         <RegistrationForm />
       </Route>
 
+
       <PrivateRoute
         component={UserPage}
         jwtToken={userToken}
         currentUser={currentUser}
         path={routes.profile}
+
       />
     </Switch>
   );

@@ -1,7 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+
 import { Redirect, useLocation } from "react-router";
+
 
 import { Form } from "antd";
 import { MailOutlined, LockOutlined, UserOutlined } from "@ant-design/icons";
@@ -24,6 +26,7 @@ import FormButton from "../FormButton/FormButton";
 import FormContainer from "../../containers/formContainer";
 import FormHeader from "../FormHeader/FormHeader";
 import { actionRegisterUser } from "../../redux/actions/actionRegisterUser";
+
 import {
   getAuthLoadingState,
   getCurrentUserData,
@@ -31,13 +34,16 @@ import {
 
 import { routes } from "../../constants/routes";
 
+
 const RegistrationForm: React.FC = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const loading = useSelector(getAuthLoadingState);
 
+
   const location: Record<string, any> = useLocation();
   const currentUser = useSelector(getCurrentUserData);
+
   // const registrationError = useSelector(getAuthErrorState);
 
   let formSubmitElement = <FormButton>Sign Up</FormButton>;
@@ -45,6 +51,7 @@ const RegistrationForm: React.FC = () => {
   if (loading) formSubmitElement = <LoadingSpinner />;
 
   // if (registrationError) return <AuthError authTitle="Ошибка Регистрации" />;
+
 
   if (localStorage.getItem("userToken") || currentUser) {
     if (location.state?.backpath)

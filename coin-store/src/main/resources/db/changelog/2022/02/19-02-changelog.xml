@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+
+
+    <changeSet id="1645276822513-1" author="fjrd">
+        <createTable tableName="customers">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_customers"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1645279242071-1" author="fjrd">
+        <createTable tableName="figi">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_figi"/>
+            </column>
+            <column name="figi" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint columnNames="figi" constraintName="uc_figi_figi" tableName="figi"/>
+    </changeSet>
+
+
+    <changeSet id="1645276865421-1" author="fjrd">
+        <createTable tableName="favourite_candles">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_favourite_candles"/>
+            </column>
+            <column name="customer_id" type="UUID"/>
+            <column name="figi_id" type="UUID"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="customer_id" baseTableName="favourite_candles" constraintName="FK_FAVOURITE_CANDLES_ON_CUSTOMER" referencedColumnNames="id" referencedTableName="customers"/>
+        <addForeignKeyConstraint baseColumnNames="figi_id" baseTableName="favourite_candles" constraintName="FK_FAVOURITE_CANDLES_ON_FIGI" referencedColumnNames="id" referencedTableName="figi"/>
+    </changeSet>
+
+</databaseChangeLog>

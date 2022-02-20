@@ -1,6 +1,8 @@
+
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useHistory, useLocation, Redirect } from "react-router-dom";
+
 
 import { Form } from "antd";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,10 +33,12 @@ import CheckboxField from "../CheckboxField/CheckboxField";
 import { validatePassword } from "../../utils/helperFunctions";
 import FormHeader from "../FormHeader/FormHeader";
 
+
 import {
   getAuthLoadingState,
   getCurrentUserData,
 } from "../../redux/selectors/selectors";
+
 
 // import { getAuthErrorState, getAuthLoadingState } from '../../../../redux/selectors/selectors';
 
@@ -73,17 +77,21 @@ const LoginForm: React.FC = () => {
   const history = useHistory();
   const loading = useSelector(getAuthLoadingState);
 
+
   const location: Record<string, any> = useLocation();
   const currentUser = useSelector(getCurrentUserData);
+
   // const loginError = useSelector(getAuthErrorState);
 
   let formSubmitElement = <FormButton>Login</FormButton>;
 
   if (loading) formSubmitElement = <LoadingSpinner />;
 
+
   if (localStorage.getItem("userToken") || currentUser) {
     if (location.state?.backpath)
       return <Redirect to={location.state.backpath} />;
+
 
     return <Redirect to={routes.profile} />;
   }

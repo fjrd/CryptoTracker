@@ -6,6 +6,7 @@ import {
   LOGIN_SUCCESS,
   AUTH_FAILURE,
   LOGOUT,
+
 } from "../../constants/actionTypes";
 
 type initialStateType = {
@@ -19,6 +20,7 @@ type initialStateType = {
 
 const initialState: initialStateType = {
   userName: "your name",
+
   loading: false,
   userData: null,
   authError: false,
@@ -42,7 +44,11 @@ const authReducer = (
         loading: false,
         authError: null,
         userData: action.payload,
+p
         userName: action.payload.name,
+=======
+        userName: action.payload.fullName,
+
         userId: action.payload.id,
       };
     case LOGIN_SUCCESS:
@@ -51,7 +57,9 @@ const authReducer = (
         loading: false,
         authError: null,
         userData: action.payload,
+
         userName: action.payload.name,
+
         userId: action.payload.user_id,
       };
     case AUTH_FAILURE:
@@ -61,8 +69,10 @@ const authReducer = (
         authError: true,
         errorMessage: action.payload,
       };
+
     case LOGOUT:
       return { ...state, userData: null };
+
 
     default:
       return state;

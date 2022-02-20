@@ -41,7 +41,9 @@ const InputElement = styled(Input)<{
   width: 100%;
   border-radius: 16px;
   border: none;
+
   background: #e2e2e2;
+
   font-size: 1.5rem;
 
   & input {

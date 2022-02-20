@@ -17,6 +17,7 @@ export const actionLoginUser = (data: any, form: FormInstance) => {
       console.log(`log! data:${JSON.stringify(data)}`);
       return postLoginUserData(data)
         .then((res) => {
+
           console.log(`login res: ${JSON.stringify(res.data)}`);
           if (!res.data) dispatch(actionAuthFailure(res.statusText));
           else {
@@ -27,6 +28,7 @@ export const actionLoginUser = (data: any, form: FormInstance) => {
                 "userToken"
               )}`
             );
+
             (
               api.defaults.headers as any
             ).Authorization = `Bearer ${res.data.token}`;

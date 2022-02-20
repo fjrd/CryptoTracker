@@ -11,6 +11,7 @@ export const getGetDataErrorState = (state: RootState) =>
 export const getGetDataErrorMessage = (state: RootState) =>
   state.getData.errorMessage;
 
+
 export const getChartData = (state: RootState) => state.getData.chartData;
 
 export const getAuthLoadingState = (state: RootState) => state.auth.loading;
@@ -24,3 +25,4 @@ export const getAuthErrorMessage = (state: RootState) =>
 export const getUserId = (state: RootState) => state.auth.userId;
 
 export const getCurrentUserData = (state: RootState) => state.auth.userData;
+

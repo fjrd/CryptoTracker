@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -12,11 +13,13 @@ import { getChartData } from "../../redux/selectors/selectors";
 const ChartPageContainer = styled.div`
   height: 100vh;
 
+
   width: 100%;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
 
   background-color: inherit;
 
@@ -33,6 +36,7 @@ const ChartPage = () => {
   return (
     <ChartPageContainer>
       <Chart name="bitoc" data={data} />
+
     </ChartPageContainer>
   );
 };

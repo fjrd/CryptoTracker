@@ -12,7 +12,9 @@ export const apiCoinGecko = axios.create({
 });
 
 export const api = axios.create({
+
   baseURL: "http://37.144.170.60:12201",
+
   headers: { Authorization: `Bearer ${token}` },
 });
 
@@ -45,13 +47,21 @@ export const postRegistrationUserData = (data: any) =>
 export const postLoginUserData = (data: any) =>
   api.post(`/api/v1/auth/sign_in`, data);
 
+export const postRegistrationUserData = (data: any) =>
+  api.post(`/api/v1/auth/sign_up`, data);
+
+export const postLoginUserData = (data: any) =>
+  api.post(`/api/v1/auth/sign_in`, data);
+
 export const getCoins = () =>
   apiCoinGecko.get("coins/markets/", {
     params: { vs_currency: "usd", per_page: 250 },
   });
 
+
 export const getSearchCoins = (query: string) =>
   apiCoinGecko.get("/search/", { params: { query: { query } } });
+
 
 export const getClaims = (
   limit: number,
