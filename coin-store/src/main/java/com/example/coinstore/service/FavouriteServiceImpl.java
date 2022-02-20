@@ -1,6 +1,6 @@
 package com.example.coinstore.service;
 
-import com.example.coinstore.api.dto.ResponseFavouriteCandle;
+import com.example.coinstore.api.dto.FavouriteCandleDto;
 import com.example.coinstore.persistence.model.Customer;
 import com.example.coinstore.persistence.model.FavouriteCandle;
 import com.example.coinstore.persistence.model.Figi;
@@ -11,6 +11,7 @@ import com.example.coinstore.service.mapper.FavouritsMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -27,18 +28,17 @@ public class FavouriteServiceImpl implements FavouriteService {
     private final FavouritsMapper mapper;
 
     @Override
-    public List<ResponseFavouriteCandle> getFavouriteListByUser(UUID userId) {
+    public List<FavouriteCandleDto> getFavouriteListByUser(UUID userId) {
         Customer customer = customerRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("No such customer with id = " + userId));
-        List<FavouriteCandle> favouriteCandleList = favouriteCandleRepository.getAllByCustomer(customer);
+        List<com.example.coinstore.persistence.model.FavouriteCandle> favouriteCandleList = favouriteCandleRepository.getAllByCustomer(customer);
         return mapper.entityToResponseList(favouriteCandleList);
     }
 
     @Override
-    public ResponseFavouriteCandle create(UUID userId, String figiName) {
+    public FavouriteCandleDto create(UUID userId, String figiName) {
         Customer customer = customerRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("No such customer with id = " + userId));
-
+                .orElseGet(() -> customerRepository.save(new Customer(userId)));
         Figi figi = figiRepository.findFigiByFigi(figiName)
                 .orElseGet(() -> figiRepository.save(Figi.builder().figi(figiName).build()));
         FavouriteCandle favouriteCandle = FavouriteCandle.builder().customer(customer).figi(figi).build();
@@ -46,6 +46,7 @@ public class FavouriteServiceImpl implements FavouriteService {
         return mapper.entityToResponse(saved);
     }
 
+    @Transactional
     @Override
     public void delete(UUID userId, String figiName) {
         Customer customer = customerRepository.findById(userId)

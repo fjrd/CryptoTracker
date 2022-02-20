@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseFavouriteCandle {
+public class FavouriteCandleDto {
 
     private UUID userId;
 

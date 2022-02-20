@@ -15,6 +15,11 @@ services:
       - CUSTOMERS_HOST=http://customers-service:8081
       - COIN_STORE_HOST=http://coin-store-service:8082
     restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: 400M
 
   #Customers
   customers:
@@ -33,6 +38,11 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 400M
 
   #CoinStore
   coin-store:
@@ -45,7 +55,7 @@ services:
       - kafka
       - postgres-coin-store
     ports:
-    - 8082:8082
+      - 8082:8082
     environment:
       - SERVER_PORT=8082
       - POSTGRES_URL=jdbc:postgresql://pg-coin-store-db:5432/postgres
@@ -54,6 +64,11 @@ services:
       - KAFKA_HOST_NAME=nf-kafka:9092
       - CANDLE_STREAM_TOPIC=CandleTopic
     restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 700M
 
   #Pipeline
   pipeline:
@@ -68,6 +83,11 @@ services:
       - topic_server=CandleTopic
       - bootstrap_server=nf-kafka:9092
     restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.60'
+          memory: 800M
 
   #Kafka
   zookeeper:
@@ -79,6 +99,11 @@ services:
     volumes:
       - zookeeper-data:/data
       - zookeeper-datalog:/datalog
+    deploy:
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: 100M
 
   kafka:
     image: wurstmeister/kafka
@@ -98,6 +123,11 @@ services:
     restart: always
     volumes:
       - kafka:/kafka
+    deploy:
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: 400M
 
   #Customers DataBase
   postgres-customers:
@@ -112,6 +142,11 @@ services:
     restart: always
     volumes:
       - pg-customers-data:/var/lib/postgresql/data/
+    deploy:
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: 80M
 
   #Coin store DataBase
   postgres-coin-store:
@@ -126,6 +161,11 @@ services:
     restart: always
     volumes:
       - pg-coin-store-data:/var/lib/postgresql/data/
+    deploy:
+      resources:
+        limits:
+          cpus: '0.05'
+          memory: 80M
 
 volumes:
   kafka:
@@ -133,4 +173,3 @@ volumes:
   zookeeper-datalog:
   pg-coin-store-data:
   pg-customers-data:
-

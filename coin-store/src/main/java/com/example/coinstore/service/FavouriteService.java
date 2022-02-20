@@ -1,14 +1,14 @@
 package com.example.coinstore.service;
 
-import com.example.coinstore.api.dto.ResponseFavouriteCandle;
+import com.example.coinstore.api.dto.FavouriteCandleDto;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface FavouriteService {
-    List<ResponseFavouriteCandle> getFavouriteListByUser(UUID userId);
+    List<FavouriteCandleDto> getFavouriteListByUser(UUID userId);
 
-    ResponseFavouriteCandle create(UUID userId, String figi);
+    FavouriteCandleDto create(UUID userId, String figi);
 
     void delete(UUID userId, String figi);
 }

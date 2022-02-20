@@ -1,7 +1,6 @@
 package com.example.coinstore.service.mapper;
 
-import com.example.coinstore.api.dto.ResponseFavouriteCandle;
-import com.example.coinstore.persistence.model.FavouriteCandle;
+import com.example.coinstore.api.dto.FavouriteCandleDto;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,9 +12,9 @@ public interface FavouritsMapper {
 
     @Mapping(source = "customer.id", target = "userId")
     @Mapping(source = "figi.figi", target = "figi")
-    List<ResponseFavouriteCandle> entityToResponseList(List<FavouriteCandle> entity);
+    List<FavouriteCandleDto> entityToResponseList(List<com.example.coinstore.persistence.model.FavouriteCandle> entity);
 
     @Mapping(source = "customer.id", target = "userId")
     @Mapping(source = "figi.figi", target = "figi")
-    ResponseFavouriteCandle entityToResponse(FavouriteCandle entity);
+    FavouriteCandleDto entityToResponse(com.example.coinstore.persistence.model.FavouriteCandle entity);
 }

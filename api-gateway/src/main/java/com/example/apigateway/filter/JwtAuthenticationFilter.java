@@ -1,5 +1,6 @@
 package com.example.apigateway.filter;
 
+import com.example.apigateway.exception.JwtAuthenticationException;
 import com.example.apigateway.util.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -36,7 +37,13 @@ public class JwtAuthenticationFilter implements GatewayFilter {
             }
 
             final String token = request.getHeaders().getOrEmpty("Authorization").get(0);
-            tokenProvider.validateToken(token);
+            try {
+                tokenProvider.validateToken(token);
+            } catch (JwtAuthenticationException e) {
+                ServerHttpResponse response = exchange.getResponse();
+                response.setStatusCode(HttpStatus.BAD_REQUEST);
+                return response.setComplete();
+            }
             exchange.getRequest().mutate().header("Authorization", token).build();
         }
 

@@ -1,7 +1,7 @@
 package com.example.coinstore.api.controller;
 
+import com.example.coinstore.api.dto.FavouriteCandleDto;
 import com.example.coinstore.api.dto.ResponseCandleDto;
-import com.example.coinstore.api.dto.ResponseFavouriteCandle;
 import com.example.coinstore.service.CandleService;
 import com.example.coinstore.service.FavouriteService;
 import lombok.RequiredArgsConstructor;
@@ -46,22 +46,22 @@ public class MainController {
     }
 
     @GetMapping("/favourites")
-    public List<ResponseFavouriteCandle> getFavouritListByUser(@RequestParam UUID userId){
+    public List<FavouriteCandleDto> getFavouritListByUser(@RequestParam UUID userId){
         log.info("getFavouritListByUser(), userId = {}", userId);
         return favouriteService.getFavouriteListByUser(userId);
     }
 
 
     @PostMapping("/favourites")
-    public ResponseFavouriteCandle createFavourites(@RequestBody UUID userId, @RequestBody String figi){
-        log.info("createFavourites(), userId = {}, figi = {}", userId, figi);
-        return favouriteService.create(userId, figi);
+    public FavouriteCandleDto createFavourites(@RequestBody FavouriteCandleDto dto) {
+        log.info("createFavourites(), userId = {}, figi = {}", dto.getUserId(), dto.getFigi());
+        return favouriteService.create(dto.getUserId(), dto.getFigi());
     }
 
     @DeleteMapping("/favourites")
-    public ResponseEntity<?> deleteFavourites(@RequestBody UUID userId, @RequestBody String figi){
-        log.info("createFavourites(), userId = {}, figi = {}", userId, figi);
-        favouriteService.delete(userId, figi);
+    public ResponseEntity<?> deleteFavourites(@RequestBody FavouriteCandleDto dto){
+        log.info("createFavourites(), userId = {}, figi = {}", dto.getUserId(), dto.getFigi());
+        favouriteService.delete(dto.getUserId(), dto.getFigi());
         return ResponseEntity.ok().build();
     }
 }
