@@ -8,7 +8,7 @@ scalaVersion := "2.13.7"
 
 idePackagePrefix := Some("com.example.spark_streaming_hw")
 
-val sparkVersion = "3.2.0"
+val sparkVersion = "3.0.0"
 val scalaJsonVersion = "4.0.4"
 
 
